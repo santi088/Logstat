@@ -1,0 +1,25 @@
+{
+  "name": "logstat",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "A command-line tool that reads a web server log file and prints a summary.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santi088/Logstat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/santi088/Logstat/issues"
+  },
+  "homepage": "https://github.com/santi088/Logstat#readme",
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "typescript": "^7.0.2"
+  }
+}
