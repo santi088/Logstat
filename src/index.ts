@@ -1,13 +1,25 @@
 import * as fs from "node:fs"
-console.log("hello world")
+
+type PathCount = Record<string, number>
+    type MsCount = Record<string, number>
+    type StatusCount = Record<number, number>
+    type TotalCounts = {
+        'path': PathCount,
+        'time': MsCount,
+        "code": StatusCount,
+    }
 
 async function read(filepath:string) {
     const stream = fs.createReadStream(filepath, {
         encoding: 'utf-8',
     })
 
-    type Counter = Record<string, number>
-    const counter: Counter = {}
+    const TotalCount: TotalCounts = {
+        'path': {},
+        'time': {},
+        'code': {}
+    }
+
     let skipped = 0
 
     for await (const chunk of stream){
@@ -17,7 +29,6 @@ async function read(filepath:string) {
             const split = a.split(' ')
 
             if (split.length !== 5) {
-                console.log(split.length);
                 skipped++
                 return acc
             }
@@ -26,10 +37,9 @@ async function read(filepath:string) {
             if (path) {
 
                 let cleaned = [...path]
-                console.log(cleaned);
                 
                 const startIndex = cleaned.indexOf('?') 
-                const stopIndex = cleaned.indexOf('=')  
+                const stopIndex = cleaned.indexOf('=')
                 
                 if (startIndex !== -1 && stopIndex !== -1 && stopIndex > startIndex) {
                     // Calculate exact count of characters between '?' and '=' inclusive
@@ -39,7 +49,7 @@ async function read(filepath:string) {
 
                 
                 cleaned = cleaned.filter(char => 
-                    ![...'0123456789', ...',.:&', ' '].includes(char))
+                    ![...'0123456789', ...'=,.:&', ' '].includes(char))
                 
                 const finalPath = cleaned[cleaned.length - 1] === '/' ? 
                     cleaned.slice(0, -1).join('') :
@@ -54,22 +64,15 @@ async function read(filepath:string) {
                 //     filteredCleaned.slice(0, -1).join('') :
                 //     filteredCleaned.join('')
 
-                acc[finalPath] = (acc[finalPath] || 0) + 1
+                acc['path'][finalPath] = (acc['path'][finalPath] || 0) + 1
             }
             return acc
-        }, counter)
+            //---------------------PATHs--------------------------------
+        }, TotalCount)
     }
     
     stream.destroy()
-    const arr = Object.entries(counter)
-
-    const count = arr.map(a => {
-        return {
-            'path': a[0], 'count': a[1]
-        }
-    })
-
-    return {count, skipped}
+    return {TotalCount, skipped}
 }
 
 const args: string[] = process.argv.slice(2)
@@ -78,12 +81,30 @@ async function main() {
     if (args.length > 0 && args[0] !== undefined) {
         const filepath = args[0]
         
-        const {count, skipped} = await read(filepath)
-        const top10Paths = count
-            .sort((a, b) => b.count - a.count)
-            .slice(0, 10)
-        console.log(top10Paths);
-        console.log(skipped);
+        const {TotalCount, skipped} = await read(filepath)
+        console.log(TotalCount);
+        
+        if (TotalCount['path']) {
+            const pathArr = Object.entries(TotalCount['path'])
+            
+            const sortedPath = [...pathArr].sort((a, b) => b[1] - a[1])
+            const topPaths = sortedPath
+                .map(p => {
+                    return {
+                        'path': p[0],
+                        'count': p[1]
+                    }
+                    
+                })
+                .slice(0, 9)
+            
+            console.log('Top Paths: ')
+            topPaths.map(p => {
+                console.log(`${p.path}              count: ${p.count}`)
+            })
+            console.log('skipped' + skipped);
+            
+        }
         
     }
 }
