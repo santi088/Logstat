@@ -83,3 +83,177 @@ const C = [...products].sort((a, b) => {
 })
 
 console.log(C);
+
+/////oct 6 2026
+
+//1
+//the formatting of the built
+// in map is better
+
+//id say this is 0(n)
+function myMap(arr, fn){
+    const newArr = []
+    for(const a of arr){
+        newArr.push(fn(a))
+    }
+    return newArr
+}
+
+//2
+// id say its 0(n) for the 
+// first one and 0(1) 
+// fot the second
+
+const sampleArr = [1, 0, 5, 8]
+function containsDuplicate(arr) {
+    const seen = {}
+    for(const a of arr){
+        if(a in seen){
+            return true
+        }
+        seen[a] = a
+    }
+    return false
+}
+
+console.log(containsDuplicate(sampleArr))
+
+function betterDuplicateCheck(arr){
+    return new Set(arr).size !== arr.length
+}
+
+
+console.log(betterDuplicateCheck(sampleArr));
+
+//3
+//first one is 0(nlogn)
+//second is 0(n)
+function isAnagram(str1, str2) {
+    const a = str1.split('').sort().join('')
+    const b = str2.split('').sort().join('')
+
+    return a === b
+}
+
+console.log(isAnagram('listen', 'silent'));
+
+function betterIsAnagram(str1, str2) {
+    const counter = {}
+    
+    if (str1.length !== str2.length) return false
+
+    for (let i = 0; i < str1.length; i++) {
+        
+        counter[str1[i]] = (counter[str1[i]] || 0) - 1
+        counter[str2[i]] = (counter[str2[i]] || 0) + 1
+    }
+
+    for (const key in counter) {
+        if (counter[key] !== 0) {
+            return false
+        }
+    }
+    return true
+}
+
+console.log(betterIsAnagram('listen', 'silent'));
+
+//4
+//brute force reminds me of bubble sorft where the outer
+//loop must only go up unitl length -1 
+//so that the inner loop doesnt go out of bounds
+
+function bruteTwoSum(arr, target) {
+    for (let i = 0; i < arr.length - 1; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+            if(arr[i] + arr[j] === target){
+                return [i, j]
+            }
+        }
+    }
+    return false
+}
+
+//i think this and the map one 
+//are both O(n)
+//but i think this one maybe is O(n^2) 
+//just because i have the findINdex isnide
+//even tho it only runs once when we find the complement
+function anotherTwoSum(arr, target) {
+    for (const [i, a] of arr.entries()) {
+        const complement =  target - a
+        if (arr.includes(complement)) {
+            return [i, arr.findIndex(i => i === complement )]
+        }
+    }
+}
+
+
+console.log('----------TWO SUM----------------');
+const twosumArr = [2, 15, 11, 7]
+console.log(bruteTwoSum(twosumArr, 22))
+console.log(anotherTwoSum(twosumArr, 22));
+
+
+//TO-DO implement using Map above
+//put it at another.js
+
+
+
+console.log('(-------------------------------');
+
+
+//5
+//O(n log n)
+
+const groupedAngram = ["eat", "tea", "tan", "ate", "nat", "bat"]
+
+function groupAnagrams(arr) {
+    const count = {}
+    arr.reduce((acc, a) => {
+        const sorted = a.split('').sort().join('')
+
+        if (acc[sorted]) {
+            acc[sorted].push(a)
+        }else{
+            acc[sorted] = [a]
+        }
+
+        return acc
+    }, count)
+
+    const finalCount =  Object.entries(count)
+        .map(a => a[1])
+
+    return finalCount
+}
+
+console.log(groupAnagrams(groupedAngram));
+
+
+//6 O(nlogn) due to the sorting
+function topK(arr, k) {
+    const count = {}
+
+    arr.reduce((acc, a) => {
+        acc[a] = (acc[a] || 0) + 1
+        return acc
+    }, count)
+
+    const arrCount = Object.entries(count)
+        .sort((a, b) => b[1] - a[1])
+        .map(([v]) => Number(v))
+        .slice(0, k)
+    return arrCount
+}
+console.log(topK([1, 1, 1, 2, 2, 3], 2));
+
+//7
+
+
+
+
+
+
+
+

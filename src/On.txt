@@ -1,0 +1,23 @@
+The one-line version: with n as the array length, 
+one loop is O(n), a loop inside a loop is O(n²), 
+a Set or Map lookup is roughly O(1), 
+and sorting is O(n log n). 
+Most of what makes these "DSA" 
+is noticing which of those you used.
+
+
+The General Rule of Thumb
+As long as you stick to these basic rules, 
+your code will stay at lightning-fast \(O(n)\) speed:
+
+• Look at the data using one loop (
+    or a few independent loops back-to-back).
+
+• Never nest loops inside each other (
+    like putting a loop inside a loop, 
+    which turns it into a much slower O(n^2)).
+
+• Avoid built-in heavy lifters 
+    like .sort(), .indexOf(), or .includes() 
+    inside your loops, because those sneaky methods 
+    secretly run their own loops under the hood!
