@@ -1,14 +1,6 @@
 import * as readline from "node:readline"
 import * as fs from "node:fs"
 
-function mem() {
-  const m = process.memoryUsage();
-  console.log(
-    `RSS: ${(m.rss/1024/1024).toFixed(1)} MB | ` +
-    `Heap: ${(m.heapUsed/1024/1024).toFixed(1)}/${(m.heapTotal/1024/1024).toFixed(1)} MB | ` +
-    `Ext: ${(m.external/1024/1024).toFixed(1)} MB`
-  );
-}   
 
 type PathCount = Record<string, number>
 type StatusCount = Record<string, number>
@@ -146,8 +138,8 @@ async function main() {
         }
 
 
-        let {max, count, sum} = totalCount.time
-        let avg = count === 0 ? 'N/A' : (sum / count).toFixed(2)
+        const {max, count, sum} = totalCount.time
+        const avg = count === 0 ? 'N/A' : (sum / count).toFixed(2)
         console.log('Max response time: ',  max);
         console.log('Average response time:', avg);
         
